@@ -9,7 +9,7 @@ This repository contains all the scripts for reproducing the experiments from
 - **som_dxdy.py** Implements the Dx-Dy representation function. It qualifies the topographic map after learning.
 - **condition.py** Computes the condition (14) from [1] assuring stability of the SOM model.
 - **plot_functions.py** Implemts all the necessary functions for plotting the figures in [1].
-- **figureX.py** All scripts named ``figure'' plot the X figure from [1]. The user need to run first the som.py and distortion scripts to get the necessary data files. All the data should be stored in a folder named ``data/''.  
+- **figureX.py** All scripts named ``figure`` plot the X figure from [1]. The user need to run first the som.py and distortion scripts to get the necessary data files. All the data should be stored in a folder named ``data/``.  
 
 ## Requirements
  - Python 3
