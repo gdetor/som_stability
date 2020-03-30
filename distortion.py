@@ -26,7 +26,7 @@ from numba import njit, prange
 from sklearn.metrics import mean_squared_error
 
 
-np.random.seed(560)     # 137
+np.random.seed(37)     # 137
 
 
 @njit(parallel=True)
@@ -40,24 +40,41 @@ def compute_rate_distortion(weights, samples):
     return distortion
 
 
-def mse(weights):
-    w_final = weights[-1]
+def mse(weights, epochs=6998, template=None):
+    if template is None:
+        w_final = weights[-1]
+    else:
+        w_final = template
     mse = []
-    for i in range(6998):
-        mse.append(mean_squared_error(w_final, weights[i]))
+    for i in range(epochs):
+        mse.append(mean_squared_error(w_final, weights[i*400]))
     return np.array(mse)
 
 
 if __name__ == '__main__':
     epochs = 7000
-    w = np.load("./data/w_hist_unstable.npy").reshape(-1, 16*16, 2)
-    samples = np.random.uniform(-1, 1, (epochs, 2))
 
-    distortion = []
-    for i in range(epochs):
-        distortion.append(compute_rate_distortion(w[i*400],
-                                                  samples))
-    plt.plot(distortion)
-    distortion = np.array(distortion)
-    np.save('./data/distortion_unstable', distortion)
-    plt.show()
+    if 0:
+        # Compute the MSE based on the final SOM's weiights
+        w_stable = np.load("./data/w_hist_stable.npy").reshape(-1, 16*16*2)
+        w_unstable = np.load("./data/w_hist_unstable.npy").reshape(-1, 16*16*2)
+        mse_stable = mse(w_stable)
+        mse_unstable = mse(w_unstable, template=w_stable[-1])
+        np.save("mse_stable", mse_stable)
+        np.save("mse_unstable", mse_unstable)
+
+    if 1:
+        # Compute distortion
+        w_stable = np.load("./data/w_hist_stable.npy").reshape(-1, 16*16, 2)
+        # w_unstable = np.load("./data/w_hist_unstable.npy").reshape(-1,
+        #                                                            16*16,
+        #                                                            2)
+        samples = np.random.uniform(-1, 1, (epochs, 2))
+        distortion = []
+        for i in range(epochs):
+            distortion.append(compute_rate_distortion(w_stable[i*400],
+                                                      samples))
+        plt.plot(distortion)
+        distortion = np.array(distortion)
+        np.save('./data/distortion_stable', distortion)
+        plt.show()

@@ -17,6 +17,7 @@
 #
 # [1] "Stability analysis of a neural field self-organizing map",
 #      G. Is. Detorakis, A. Chaillet, N.P. Rougier, 2020.
+import sys
 import numpy as np
 from scipy.special import erf
 
@@ -30,19 +31,22 @@ def xi(sigma, a=-1, b=1):
 
 def condition(x):
     Ke = x[0]
-    sigma_e = 0.1
+    sigma_e = 0.09
     Ki = x[1]
-    sigma_i = 1.0
-    res = (Ke**2 * xi(sigma_e * np.sqrt(2)) + Ki**2 * xi(sigma_i * np.sqrt(2))
+    sigma_i = 1.00
+    res = (Ke**2 * xi(sigma_e * np.sqrt(2))**2
+           + Ki**2 * xi(sigma_i * np.sqrt(2))**2
            - 2 * Ke * Ki
-           * xi((sigma_e * sigma_i) / np.sqrt(sigma_e**2 + sigma_i**2)))
+           * xi((sigma_e * sigma_i) / np.sqrt(sigma_e**2 + sigma_i**2))**2)
     return res
 
 
 if __name__ == '__main__':
-    x_stable = np.array([0.9, 0.5])
-    x_unstable = np.array([1.3, 0.7])
-    res = condition(x_unstable)
+    # x_stable = np.array([0.9, 0.5])
+    # x_stable = np.array([0.25, 0.3])
+    # x_unstable = np.array([1.3, 0.7])
+    x = np.array([float(sys.argv[1]), float(sys.argv[2])])
+    res = condition(x)
     if res < 1:
         print("Stable equilibrium: %f < 1" % (res))
     else:

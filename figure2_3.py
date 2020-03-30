@@ -24,13 +24,13 @@ from plot_functions import plot_panels
 
 
 if __name__ == '__main__':
-    # w_hist = np.load('./data/w_hist.npy')
-    # distortion = np.load('./data/distortion.npy')
-    # plot_panels(w_hist, distortion)
-    # plt.savefig('Figure02.pdf', axis='tight')
-
-    w_hist = np.load('./data/w_hist_unstable.npy')
-    distortion = np.load('./data/distortion_unstable.npy')
+    w_hist = np.load('./data/w_hist_stable.npy')
+    distortion = np.load('./data/distortion_stable.npy')
     plot_panels(w_hist, distortion)
-    plt.savefig('Figure03.pdf', axis='tight')
+    plt.savefig('Figure02.pdf', axis='tight')
+
+    # w_hist = np.load('./data/w_hist_unstable.npy')
+    # distortion = np.load('./data/distortion_unstable.npy')
+    # plot_panels(w_hist, distortion)
+    # plt.savefig('Figure03.pdf', axis='tight')
     plt.show()

@@ -99,13 +99,13 @@ def simulation(store=False):
     ms = 0.001
     dt = 25.0*ms    # Timestep 35.0/T
     lrate = 0.01    # Learning rate 0.01
-    alpha = 0.10    # Time constant
+    alpha = 1.00    # Time constant
     tau = 1.00      # Synapse temporal decay
     epochs = 7000   # Number of training epochs
 
-    Ke = 1.3        # Strength of lateral excitatory weights
-    sigma_e = 0.1   # Extent of lateral excitatory weights
-    Ki = 0.7        # Strength of lateral inhibitory weights
+    Ke = 0.40       # Strength of lateral excitatory weights
+    sigma_e = 0.09  # Extent of lateral excitatory weights
+    Ki = 0.25       # Strength of lateral inhibitory weights
     sigma_i = 1.0   # Extent of lateral excitatory weights
 
     # Neural field setup
