@@ -22,10 +22,10 @@ import matplotlib.pylab as plt
 
 from som_dxdy import som_regularity
 
-np.random.seed(560)     # 137 stable, 560 unstable
+np.random.seed(135)     # 137 stable, 560 unstable
 
 
-def plot_weights(samples, weights, ax):
+def plot_weights(samples, weights, ax, axis=[-1, 1], title='', size=50):
     # Draw samples
     ax.scatter(samples[:, 0], samples[:, 1], s=3.0,
                color='k', alpha=0.3, zorder=1)
@@ -39,12 +39,13 @@ def plot_weights(samples, weights, ax):
             ax.plot(x[:, i], y[:, i], 'k', alpha=0.95, lw=1.5, zorder=2)
     else:
         ax.plot(x, y, 'k', alpha=0.85, lw=1.5, zorder=2)
-    ax.scatter(x, y, s=50, c='w', edgecolors='k', zorder=3)
+    ax.scatter(x, y, s=size, c='w', edgecolors='k', zorder=3)
 
-    ax.set_xlim([-1, 1])
-    ax.set_ylim([-1, 1])
+    ax.set_xlim(axis)
+    ax.set_ylim(axis)
     ax.set_xticklabels([])
     ax.set_yticklabels([])
+    ax.set_title(title)
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
@@ -57,9 +58,9 @@ def plot_panels(w_hist, distortion):
     fig.subplots_adjust(wspace=.3, hspace=.2)
     ax = fig.add_subplot(221)
     data = w.reshape(n, n, k)
-    samples = np.random.uniform(-1, 1, (5000, 2))
-    plot_weights(samples, data, ax)
-    ax.text(-1, 1.1, 'A',
+    samples = np.random.uniform(0, 1, (7000, 2))
+    plot_weights(samples, data, ax, axis=[0, 1])
+    ax.text(0, 1.05, 'A',
             ha='left',
             va='top',
             fontsize=18,
@@ -80,8 +81,9 @@ def plot_panels(w_hist, distortion):
     ticks = ax.get_xticks()
     ax.set_xticklabels(ticks, fontsize=15, weight='bold')
     ticks = ax.get_yticks()
+    ticks = [np.round(i, 2) for i in ticks]
     ax.set_yticklabels(ticks, fontsize=15, weight='bold')
-    ax.text(0, 2.26, 'B',
+    ax.text(0, 1.27, 'B',
             ha='left',
             va='top',
             fontsize=18,
@@ -90,32 +92,32 @@ def plot_panels(w_hist, distortion):
     ax = fig.add_subplot(223)
     ax.plot(distortion, 'k', lw=2, label='Rate-distortion')
     ax.set_xlim([0, 7000])
-    # ax.set_ylim([0, 0.05])
-    ax.set_ylim([0, 0.2])
+    ax.set_ylim([0, 0.02])
+    # ax.set_ylim([0, 0.12])
     ax.set_xticks([0, 3500, 7000])
     ticks = ax.get_xticks().astype('i')
     ax.set_xticklabels(ticks, fontsize=15, weight='bold')
     ticks = ax.get_yticks()
-    ticks = [np.round(i, 2) for i in ticks]
-    ax.set_yticklabels(ticks, fontsize=15, weight='bold')
+    ax.set_yticklabels(np.round(ticks, 4), fontsize=15, weight='bold')
     ax.set_xlabel('Epochs', fontsize=15, weight='bold')
     ax.set_ylabel('Distortion', fontsize=15, weight='bold')
     # ax.text(0, 0.0525, 'C',
-    ax.text(0, 0.21, 'C',
+    ax.text(0, 0.021, 'C',
             ha='left',
             va='top',
             fontsize=18,
             weight='bold')
 
-    End = 7000 * 400
+    End = 7000
     colors = ['k', 'orange', 'm']
     Neurons = [(10, 10), (4, 9), (14, 3), (10, 10), (4, 9), (14, 3)]
+    Labels = ['(0.625, 0.625)', '(0.25, 0.5625)', '(0.875, 0.1875)']
     ax = fig.add_subplot(224)
     ii = 0
     for i in range(3):
         ax.plot(w_hist[:, np.prod(Neurons[i]), 0], color=colors[i], lw=2,
-                label=r'${\bf r^*}$'+'='+str(Neurons[i]))
-        ax.set_ylim([-2, 2])
+                label=r'${\bf r^*}$'+'='+Labels[i])
+        ax.set_ylim([0, 1])
         ax.set_xlim([0, End])
 
         ticks = ax.get_yticks()
@@ -124,14 +126,15 @@ def plot_panels(w_hist, distortion):
         ax.xaxis.set_ticks_position('bottom')
         ax.set_ylabel(r'${\bf w_f(r^*, t)}$', rotation=90, fontsize=15,
                       weight='bold')
+        ax.set_xticks([0, 3500, 7000])
         ticks = ax.get_xticks().astype('i')
-        ticks = [int(i / 400) for i in ticks]
+        ticks = [int(i) for i in ticks]
         ax.set_xticklabels(ticks, fontsize=15, weight='bold')
         ax.set_xlabel('Epochs', fontsize=15, weight='bold')
         ax.legend()
         ii += 1
     # ax.text(0, 1.1, 'D',
-    ax.text(0, 2.19, 'D',
+    ax.text(0, 1.05, 'D',
             ha='left',
             va='top',
             fontsize=18,

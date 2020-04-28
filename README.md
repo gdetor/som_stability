@@ -19,6 +19,15 @@ This repository contains all the scripts for reproducing the experiments from
  - Matlotlib
 
 
+## Run experiments
+In order to run the experiments you can use the script ``som.py`` as follows:
+```
+$ python som.py 135 0.47 0.2 04702
+```
+In this case you run the SOM experiment with \\[(K_e, K_i) = (0.47, 0.2)\\] 
+and the PRNG seed set to 135.
+
+
 ## Running platform information
 The current source code has been tested on the following system configuration:
 - CPU Intel i7 10th Generation with 32 GB physical memory

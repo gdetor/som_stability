@@ -26,18 +26,15 @@ def xi(sigma, a=-1, b=1):
     tmp = (2 * sigma**2 * (np.exp(-(a - b)**2 / (2 * sigma**2)) - 1)
            + sigma * np.sqrt(2*np.pi) * (a - b)
            * erf((a - b) / (sigma * np.sqrt(2))))
-    return tmp
+    return tmp**2
 
 
-def condition(x):
-    Ke = x[0]
-    sigma_e = 0.09
-    Ki = x[1]
-    sigma_i = 1.00
-    res = (Ke**2 * xi(sigma_e * np.sqrt(2))**2
-           + Ki**2 * xi(sigma_i * np.sqrt(2))**2
+def condition(Ke, sigma_e, Ki, sigma_i, alpha=-1, beta=1):
+    res = (Ke**2 * xi(sigma_e / np.sqrt(2), a=alpha, b=beta)
+           + Ki**2 * xi(sigma_i / np.sqrt(2), a=alpha, b=beta)
            - 2 * Ke * Ki
-           * xi((sigma_e * sigma_i) / np.sqrt(sigma_e**2 + sigma_i**2))**2)
+           * xi((sigma_e * sigma_i) / np.sqrt(sigma_e**2 + sigma_i**2),
+                a=alpha, b=beta))
     return res
 
 
@@ -45,8 +42,12 @@ if __name__ == '__main__':
     # x_stable = np.array([0.9, 0.5])
     # x_stable = np.array([0.25, 0.3])
     # x_unstable = np.array([1.3, 0.7])
-    x = np.array([float(sys.argv[1]), float(sys.argv[2])])
-    res = condition(x)
+    # x = np.array([float(sys.argv[1]), float(sys.argv[2])])
+    Ke = float(sys.argv[1])
+    sigma_e = float(sys.argv[2])
+    Ki = float(sys.argv[3])
+    sigma_i = float(sys.argv[4])
+    res = condition(Ke, sigma_e, Ki, sigma_i, alpha=-1, beta=1)
     if res < 1:
         print("Stable equilibrium: %f < 1" % (res))
     else:

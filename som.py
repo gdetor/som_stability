@@ -88,7 +88,7 @@ def gaussian(shape, width=(1, 1), center=(0, 0)):
 
 
 @fn_timer
-def simulation(store=False):
+def simulation(Ke, Ki, fname="test", store=False):
     # Parameters
     # --------------------------------------------
     Rn = 2      # Receptors count (Rn x Rn)
@@ -103,15 +103,15 @@ def simulation(store=False):
     tau = 1.00      # Synapse temporal decay
     epochs = 7000   # Number of training epochs
 
-    Ke = 0.40       # Strength of lateral excitatory weights
-    sigma_e = 0.09  # Extent of lateral excitatory weights
-    Ki = 0.25       # Strength of lateral inhibitory weights
+    # Ke = 0.40     # Strength of lateral excitatory weights
+    sigma_e = 0.1   # Extent of lateral excitatory weights
+    # Ki = 0.25     # Strength of lateral inhibitory weights
     sigma_i = 1.0   # Extent of lateral excitatory weights
 
     # Neural field setup
     # --------------------------------------------
     U = np.random.uniform(0.00, 0.01, (n, n))
-    W = np.random.uniform(-1.0, 1.0, (n*n, Rn))
+    W = np.random.uniform(0.0, 0.01, (n*n, Rn))
 
     # FFT implementation
     # --------------------------------------------
@@ -132,7 +132,7 @@ def simulation(store=False):
     # Samples generation
     # --------------------------------------------
     n_samples = epochs
-    samples = np.random.uniform(-1.0, 1.0, (n_samples, 2))
+    samples = np.random.uniform(0.0, 1.0, (n_samples, 2))
 
     # Actual training
     # --------------------------------------------
@@ -153,28 +153,28 @@ def simulation(store=False):
             Li = irfft2(Z * Wi_fft, shape).real[i0:i1, j0:j1]
             U += (-U + (Le - Li) + Inp) * dt / tau
             W -= lrate * (Le.ravel() * (W - stimulus).T).T * dt
-            w_hist.append(W.copy())
+        w_hist.append(W.copy())
 
         # Field's activity reset
         U = np.random.uniform(0.00, 0.01, (n, n))
 
         # Store weights and show statistics
         if store is True:
-            np.save("./data/weights_"+str(e), W.flatten())
+            np.save("./results/weights_"+str(e), W.flatten())
         if e % 500 == 0:
             print(e)
 
     w_hist = np.array(w_hist)
-    np.save("./data/w_hist_unstable", w_hist)
+    np.save("./results/w_hist_unstable", w_hist)
     return samples, W
 
 
 if __name__ == '__main__':
     np.random.seed(int(sys.argv[1]))
     # np.random.seed(37)
-    s, w = simulation()
+    s, w = simulation(float(sys.argv[2], float(sys.argv[3], sys.argv[4])))
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    plot_weights(s, w.reshape(16, 16, 2), ax)
+    plot_weights(s, w.reshape(16, 16, 2), ax, axis=[0, 1])
     plt.show()
