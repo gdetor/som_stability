@@ -24,7 +24,7 @@ In order to run the experiments you can use the script ``som.py`` as follows:
 ```
 $ python som.py 135 0.47 0.2 04702
 ```
-In this case you run the SOM experiment with \\[(K_e, K_i) = (0.47, 0.2)\\] 
+In this case you run the SOM experiment with (K_e, K_i) = (0.47, 0.2) 
 and the PRNG seed set to 135.
 
 
