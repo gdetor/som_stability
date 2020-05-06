@@ -25,6 +25,10 @@ from som_dxdy import som_regularity
 from sklearn.linear_model import LinearRegression
 
 
+def euclidean_dist(x, y):
+    return np.sqrt(((x - y)**2).sum())
+
+
 if __name__ == '__main__':
     Ke = [0.47, 0.61, 0.74, 0.8, 0.9, 1.0, 2.0, 3.0]
     Ki = [0.2, 0.3, 0.4, 0.45, 0.53, 0.60, 1.40, 2.25]
@@ -46,8 +50,13 @@ if __name__ == '__main__':
         dist.append(tmp[-10:].mean())
         w = np.load("./results/w_hist_"+names[i]+".npy")[-1]
         dX, dY, SOMLine = som_regularity(w.reshape(16, 16, 2))
+        x_ext = np.linspace(0, dY.max(), 100)
+        p = np.polyfit(SOMLine[:, 0], SOMLine[:, 1], deg=1)
+        y_ext = np.poly1d(p)(x_ext)
         lreg.fit(dY.reshape(-1, 1), dX.reshape(-1, 1))
-        reg.append(lreg.coef_[0])
+        D = euclidean_dist(y_ext, lreg.coef_[0]*x_ext)
+        reg.append(D)
+        # reg.append(lreg.coef_[0])
     cond = np.array(cond)
     dist = np.array(dist)
     reg = np.array(reg)
@@ -64,7 +73,7 @@ if __name__ == '__main__':
     p1, = host.plot(cond, 'k-o', lw=2, ms=10, label="Stability Condition")
     host.axhline(1, c='k', lw=2, ls='--')
     p2, = par1.plot(reg, 'g-', marker='x', lw=2, ms=10,
-                    label=r"${\bf \delta x - \delta y}$ Slope")
+                    label=r"${\bf \mathcal{P}}$")
     p3, = par2.plot(dist, c='orange', marker='.', lw=2, ms=10,
                     label="Distortion")
 
@@ -77,7 +86,7 @@ if __name__ == '__main__':
 
     host.set_xlabel(r"${\bf (K_e, K_i)}$", fontsize=16, weight='bold')
     host.set_ylabel("Stability Condition", fontsize=16, weight='bold')
-    par1.set_ylabel(r"${\bf \delta x - \delta y}$ Slope", fontsize=16,
+    par1.set_ylabel(r"${\bf \mathcal{P}}$", fontsize=16,
                     weight='bold')
     par2.set_ylabel("Distortion", fontsize=16, weight='bold')
 

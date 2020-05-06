@@ -21,6 +21,7 @@ import numpy as np
 import matplotlib.pylab as plt
 
 from som_dxdy import som_regularity
+from sklearn.linear_model import LinearRegression
 
 np.random.seed(135)     # 137 stable, 560 unstable
 
@@ -50,6 +51,10 @@ def plot_weights(samples, weights, ax, axis=[-1, 1], title='', size=50):
     ax.get_yaxis().set_visible(False)
 
 
+def euclidean_dist(x, y):
+    return np.sqrt(((x - y)**2).sum())
+
+
 def plot_panels(w_hist, distortion):
     w = w_hist[-1].flatten()
     n, k = 16, 2
@@ -68,11 +73,15 @@ def plot_panels(w_hist, distortion):
 
     ax = fig.add_subplot(222)
     dX, dY, SOMLine = som_regularity(w.reshape(16, 16, 2))
-    ax.scatter(dY, dX, s=1, c='k', marker='s', label='Rate-distortion')
+    K = np.random.choice([i for i in range(len(dX))], size=10000)
+    lreg = LinearRegression(fit_intercept=False)
+    lreg.fit(dY.reshape(-1, 1), dX.reshape(-1, 1))
+    ax.scatter(dY[K], dX[K], s=1, c='k', marker='s', label='Rate-distortion')
     x_ext = np.linspace(0, dY.max(), 100)
     p = np.polyfit(SOMLine[:, 0], SOMLine[:, 1], deg=1)
     y_ext = np.poly1d(p)(x_ext)
     ax.plot(x_ext, y_ext, 'r', lw=1.5)
+    ax.plot(x_ext, lreg.coef_[0]*x_ext, 'm', ls='--')
     ax.set_xlim([0, dY.max()+0.15])
     ax.set_ylim([0, dX.max()+0.15])
     ax.set_xlabel(r'$\delta{\bf y}$', fontsize=15)
@@ -83,7 +92,16 @@ def plot_panels(w_hist, distortion):
     ticks = ax.get_yticks()
     ticks = [np.round(i, 2) for i in ticks]
     ax.set_yticklabels(ticks, fontsize=15, weight='bold')
-    ax.text(0, 1.27, 'B',
+    # P = (np.round(np.abs(dX.mean() - lreg.coef_[0]) / dX.mean(), 4)[0])
+    D = euclidean_dist(y_ext, lreg.coef_[0]*x_ext)
+    # ax.text(0, 1.27, 'B',
+    ax.text(0, 1.07, 'B',
+            ha='left',
+            va='top',
+            fontsize=18,
+            weight='bold')
+
+    ax.text(6, 1.0, r"$\mathcal{P} = $ "+str(np.round(D, 2)),
             ha='left',
             va='top',
             fontsize=18,
