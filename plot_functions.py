@@ -23,7 +23,7 @@ import matplotlib.pylab as plt
 from som_dxdy import som_regularity
 from sklearn.linear_model import LinearRegression
 
-np.random.seed(135)     # 137 stable, 560 unstable
+np.random.seed(721)     # 137 stable, 560 unstable
 
 
 def plot_weights(samples, weights, ax, axis=[-1, 1], title='', size=50):

@@ -92,25 +92,24 @@ def simulation(Ke, Ki, fname="test", store=False):
     # Parameters
     # --------------------------------------------
     Rn = 2      # Receptors count (Rn x Rn)
-    n = 16      # Neural field size (n x n)
+    n = 40      # Neural field size (n x n)
     p = 2*n+1
 
-    T = 10.0       # Nu of Euler's time discretization 100.0
+    T = 25.0       # Nu of Euler's time discretization 100.0
     ms = 0.001
-    dt = 25.0*ms    # Timestep 35.0/T
-    lrate = 0.01    # Learning rate 0.01
-    alpha = 1.00    # Time constant
+    dt = 15.0*ms    # Timestep 35.0/T
+    lrate = 0.002   # Learning rate 0.01
     tau = 1.00      # Synapse temporal decay
     epochs = 7000   # Number of training epochs
 
     # Ke = 0.40     # Strength of lateral excitatory weights
-    sigma_e = 0.1   # Extent of lateral excitatory weights
+    sigma_e = 0.11  # Extent of lateral excitatory weights
     # Ki = 0.25     # Strength of lateral inhibitory weights
-    sigma_i = 1.0   # Extent of lateral excitatory weights
+    sigma_i = 1.00  # Extent of lateral excitatory weights
 
     # Neural field setup
     # --------------------------------------------
-    U = np.random.uniform(0.00, 0.01, (n, n))
+    U = np.zeros((n, n))
     W = np.random.uniform(0.0, 0.01, (n*n, Rn))
 
     # FFT implementation
@@ -144,7 +143,7 @@ def simulation(Ke, Ki, fname="test", store=False):
 
         # Computes field input accordingly
         D = ((np.abs(W - stimulus)).sum(axis=-1))/float(Rn)
-        Inp = (1.0 - D.reshape(n, n)) * alpha
+        Inp = (1.0 - D.reshape(n, n))
 
         # Field simulation until convergence
         for i in range(int(T / dt)):
@@ -156,7 +155,7 @@ def simulation(Ke, Ki, fname="test", store=False):
         w_hist.append(W.copy())
 
         # Field's activity reset
-        U = np.random.uniform(0.00, 0.01, (n, n))
+        U = np.zeros((n, n))
 
         # Store weights and show statistics
         if store is True:
@@ -171,7 +170,6 @@ def simulation(Ke, Ki, fname="test", store=False):
 
 if __name__ == '__main__':
     np.random.seed(int(sys.argv[1]))
-    # np.random.seed(37)
     s, w = simulation(float(sys.argv[2], float(sys.argv[3], sys.argv[4])))
 
     fig = plt.figure()
