@@ -23,10 +23,11 @@ This repository contains all the scripts for reproducing the experiments from
 ## Run experiments
 In order to run the experiments you can use the script ``som.py`` as follows:
 ```
-$ python som.py 135 0.47 0.2 04702
+$ python som.py 135 0.3 0.25 04702
 ```
-In this case you run the SOM experiment with (K_e, K_i) = (0.47, 0.2) 
-and the PRNG seed set to 135.
+In this case you run the SOM experiment with (K_e, K_i) = (0.3, 0.25) 
+and the PRNG seed set to 135. The user can find more parameters in the
+original paper [1].
 
 
 ## Running platform information

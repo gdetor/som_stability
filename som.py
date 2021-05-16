@@ -170,7 +170,7 @@ def simulation(Ke, Ki, fname="test", store=False):
 
 if __name__ == '__main__':
     np.random.seed(int(sys.argv[1]))
-    s, w = simulation(float(sys.argv[2], float(sys.argv[3], sys.argv[4])))
+    s, w = simulation(float(sys.argv[2]), float(sys.argv[3]), sys.argv[4])
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
