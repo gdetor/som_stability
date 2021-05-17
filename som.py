@@ -174,5 +174,5 @@ if __name__ == '__main__':
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    plot_weights(s, w.reshape(16, 16, 2), ax, axis=[0, 1])
+    plot_weights(s, w.reshape(40, 40, 2), ax, axis=[0, 1])
     plt.show()
