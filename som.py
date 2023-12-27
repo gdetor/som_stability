@@ -27,6 +27,11 @@ from numpy.fft import rfft2, irfft2
 
 from plot_functions import plot_weights
 
+from numpy.random import default_rng
+
+
+rng = default_rng()
+
 
 def fn_timer(function):
     @wraps(function)
@@ -110,7 +115,8 @@ def simulation(Ke, Ki, fname="test", store=False):
     # Neural field setup
     # --------------------------------------------
     U = np.zeros((n, n))
-    W = np.random.uniform(0.0, 0.01, (n*n, Rn))
+    # W = np.random.uniform(0.0, 0.01, (n*n, Rn))
+    W = rng.uniform(0.0, 0.01, (n*n, Rn))
 
     # FFT implementation
     # --------------------------------------------
@@ -131,7 +137,8 @@ def simulation(Ke, Ki, fname="test", store=False):
     # Samples generation
     # --------------------------------------------
     n_samples = epochs
-    samples = np.random.uniform(0.0, 1.0, (n_samples, 2))
+    # samples = np.random.uniform(0.0, 1.0, (n_samples, 2))
+    samples = rng.uniform(0.0, 1.0, (n_samples, 2))
 
     # Actual training
     # --------------------------------------------
@@ -169,7 +176,7 @@ def simulation(Ke, Ki, fname="test", store=False):
 
 
 if __name__ == '__main__':
-    np.random.seed(int(sys.argv[1]))
+    # np.random.seed(int(sys.argv[1]))
     s, w = simulation(float(sys.argv[2]), float(sys.argv[3]), sys.argv[4])
 
     fig = plt.figure()
